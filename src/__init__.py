@@ -1,4 +1,5 @@
 import tbapy  # gives access to TBA API
+import writer
 
 
 def create_dict(team_dict, team):
@@ -263,7 +264,7 @@ def main():
                           auto_cell_outer, control, endgame, tele_cell_bottom, tele_cell_inner,
                           tele_cell_outer, index, auto_movement)
     find_averages(team_dict)
-    print(team_dict)
+    writer.create_csv('2020ohmv', team_dict)
     # Turn into CSV file
 
 
