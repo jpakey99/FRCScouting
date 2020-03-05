@@ -192,3 +192,4 @@ def get_opr():
 
 main()
 get_opr()
+writer.update_google_sheets()

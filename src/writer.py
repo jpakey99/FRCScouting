@@ -1,5 +1,5 @@
-from __future__ import print_function
-
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
 
 def create_csv(event, team_dict):
     filename = event + '.csv'
@@ -65,17 +65,24 @@ def create_pr_csv(event, stats_dict):
     header = 'team,opr,dpr\n'
     file.write(header)
     for team in stats_dict:
-        buffer = team + ',' + str(stats_dict[team]['opr']) + ',' + str(stats_dict[team]['dpr']) + '\n'
+        buffer = team[3:] + ',' + str(stats_dict[team]['opr']) + ',' + str(stats_dict[team]['dpr']) + '\n'
         file.write(buffer)
         buffer = ''
 
-# def update_google_sheets():
-#     spreadsheet = {
-#         'properties': {
-#             'title': '2020ohmv'
-#         }
-#     }
-#     service = build('sheets', 'v4', credentials=None)
-#     spreadsheet = service.spreadsheets().create(body=spreadsheet,
-#                                                 fields='spreadsheetId').execute()
-#     print('Spreadsheet ID: {0}'.format(spreadsheet.get('spreadsheetId')))
+def update_google_sheets():
+    scope = ['https://spreadsheets.google.com/feeds',
+             'https://www.googleapis.com/auth/drive']
+
+    credentials = ServiceAccountCredentials.from_json_keyfile_name('frc1-270019-1901cd8234bb.json', scope)
+
+    gc = gspread.authorize(credentials)
+
+    wks = gc.open("Sheets_API_Test")
+    file1 = '2020ohmv.csv'
+    file2 = '2020ohmv_matches.csv'
+    file3 = '2020ohmvpr.csv'
+    content = open(file1, 'r').read()
+    content = content + open(file2, 'r').read()
+    content = content + open(file3, 'r').read()
+    gc.import_csv('1zai9_t9VZikNr594JIlGy6PBNQ3tipCi-_mOraNGzPk', content)
+
