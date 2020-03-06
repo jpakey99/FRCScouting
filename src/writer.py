@@ -4,6 +4,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 def create_csv(event, team_dict):
     filename = event + '.csv'
     file = open(filename, 'w')
+    print(team_dict)
     header = 'team,'
     for i in range(0, 4):
         for j in range(0, 10):
@@ -20,6 +21,7 @@ def create_csv(event, team_dict):
     file.write(header + '\n')
     buffer = ''
     full_buffer = [''] * 61
+    index = 0
     for team in team_dict:
         buffer = buffer + team[3:] + ','
         for field in team_dict[team]:
@@ -29,7 +31,9 @@ def create_csv(event, team_dict):
                 for thing in team_dict[team][field]:
                     buffer = buffer + str(thing) + ','
         buffer = buffer + '\n'
-        full_buffer[team_dict[team]['ranking']] = buffer
+        full_buffer[index] = buffer
+        index += 1
+        #full_buffer[team_dict[team]['ranking']] = buffer
         buffer = ''
     for team in full_buffer:
         file.write(team)
@@ -78,9 +82,9 @@ def update_google_sheets():
     gc = gspread.authorize(credentials)
 
     wks = gc.open("Sheets_API_Test")
-    file1 = '2020ohmv.csv'
-    file2 = '2020ohmv_matches.csv'
-    file3 = '2020ohmvpr.csv'
+    file1 = '2020mndu2.csv'
+    file2 = '2020mndu2_matches.csv'
+    file3 = '2020mndu2pr.csv'
     content = open(file1, 'r').read()
     content = content + open(file2, 'r').read()
     content = content + open(file3, 'r').read()

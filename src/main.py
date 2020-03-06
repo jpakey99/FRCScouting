@@ -109,12 +109,12 @@ def get_rankings(team_dict, event, tba):
 
 def main():
     team_dict = {}
-    matches = tba.event_matches('2020ohmv')
-    writer.create_match_csv('2020ohmv', matches)
+    matches = tba.event_matches('2020mndu2')
+    writer.create_match_csv('2020mndu2', matches)
     # loop over teams and add them to the team_dict
-    for team in tba.event_teams('2020ohmv', keys=True):
+    for team in tba.event_teams('2020mndu2', keys=True):
         add_team(team, team_dict)
-    get_rankings(team_dict, '2020ohmv', tba)
+    get_rankings(team_dict, '2020mndu2', tba)
     # loop over qualification matches, adding info to the team_dict
     for match in matches:
         if match['comp_level'] == 'qm':
@@ -129,35 +129,44 @@ def main():
             index = get_index(match['match_number'])
 
             # Blue 1
-            endgame = get_endgame(match['score_breakdown']['blue']['endgameRobot1'])
-            auto_movement = get_auto_movement(match['score_breakdown']['blue']['initLineRobot1'])
-            add_team_dict(team_dict, blue_alliance[0], blue_score, endgame, index, auto_movement)
-            # blue 2
-            endgame = get_endgame(match['score_breakdown']['blue']['endgameRobot2'])
-            auto_movement = get_auto_movement(match['score_breakdown']['blue']['initLineRobot2'])
-            add_team_dict(team_dict, blue_alliance[1], blue_score, endgame, index, auto_movement)
-            # blue 3
-            endgame = get_endgame(match['score_breakdown']['blue']['endgameRobot2'])
-            auto_movement = get_auto_movement(match['score_breakdown']['blue']['initLineRobot2'])
-            add_team_dict(team_dict, blue_alliance[2], blue_score, endgame, index, auto_movement)
-            # Red Score Breakdown
-            # control = get_control(match, 'red')
-            # Red 1
-            endgame = get_endgame(match['score_breakdown']['red']['endgameRobot1'])
-            auto_movement = get_auto_movement(match['score_breakdown']['red']['initLineRobot1'])
-            add_team_dict(team_dict, red_alliance[0], red_score, endgame, index, auto_movement)
-            # Red 2
-            endgame = get_endgame(match['score_breakdown']['red']['endgameRobot2'])
-            auto_movement = get_auto_movement(match['score_breakdown']['red']['initLineRobot2'])
-            add_team_dict(team_dict, red_alliance[1], red_score, endgame, index, auto_movement)
-            # Red 3
-            endgame = get_endgame(match['score_breakdown']['red']['endgameRobot3'])
-            auto_movement = get_auto_movement(match['score_breakdown']['red']['initLineRobot3'])
-            add_team_dict(team_dict, red_alliance[2], red_score, endgame, index, auto_movement)
+            if (match['score_breakdown'] != None):
+                endgame = get_endgame(match['score_breakdown']['blue']['endgameRobot1'])
+                auto_movement = get_auto_movement(match['score_breakdown']['blue']['initLineRobot1'])
+                add_team_dict(team_dict, blue_alliance[0], blue_score, endgame, index, auto_movement)
+                # blue 2
+                endgame = get_endgame(match['score_breakdown']['blue']['endgameRobot2'])
+                auto_movement = get_auto_movement(match['score_breakdown']['blue']['initLineRobot2'])
+                add_team_dict(team_dict, blue_alliance[1], blue_score, endgame, index, auto_movement)
+                # blue 3
+                endgame = get_endgame(match['score_breakdown']['blue']['endgameRobot2'])
+                auto_movement = get_auto_movement(match['score_breakdown']['blue']['initLineRobot2'])
+                add_team_dict(team_dict, blue_alliance[2], blue_score, endgame, index, auto_movement)
+                # Red Score Breakdown
+                # control = get_control(match, 'red')
+                # Red 1
+                endgame = get_endgame(match['score_breakdown']['red']['endgameRobot1'])
+                auto_movement = get_auto_movement(match['score_breakdown']['red']['initLineRobot1'])
+                add_team_dict(team_dict, red_alliance[0], red_score, endgame, index, auto_movement)
+                # Red 2
+                endgame = get_endgame(match['score_breakdown']['red']['endgameRobot2'])
+                auto_movement = get_auto_movement(match['score_breakdown']['red']['initLineRobot2'])
+                add_team_dict(team_dict, red_alliance[1], red_score, endgame, index, auto_movement)
+                # Red 3
+                endgame = get_endgame(match['score_breakdown']['red']['endgameRobot3'])
+                auto_movement = get_auto_movement(match['score_breakdown']['red']['initLineRobot3'])
+                add_team_dict(team_dict, red_alliance[2], red_score, endgame, index, auto_movement)
+            else:
+                add_team_dict(team_dict, blue_alliance[0], blue_score, 0, index, 0)
+                add_team_dict(team_dict, blue_alliance[1], blue_score, 0, index, 0)
+                add_team_dict(team_dict, blue_alliance[2], blue_score, 0, index, 0)
+                add_team_dict(team_dict, red_alliance[0], blue_score, 0, index, 0)
+                add_team_dict(team_dict, red_alliance[1], blue_score, 0, index, 0)
+                add_team_dict(team_dict, red_alliance[2], blue_score, 0, index, 0)
+
     find_averages(team_dict)
 
     # Turn into CSV file
-    writer.create_csv('2020ohmv', team_dict)
+    writer.create_csv('2020mndu2', team_dict)
 
 
 def create_stats_dict(stats_dict, team):
@@ -176,7 +185,7 @@ def add_value(stats_dict, is_opr, value, team):
 
 def get_opr():
     stats_dict = {}
-    event = '2020ohmv'
+    event = '2020mndu2'
     statistics = tba.event_oprs(event)
     for item in statistics['oprs']:
         team = item
