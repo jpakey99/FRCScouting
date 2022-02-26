@@ -10,6 +10,7 @@ AUTO, TELE = 'auto', 'teleop'
 low_auto_points, high_auto_points, low_tele_points, high_tele_points = 2,4,1,2
 CARGO_LOW, CARGO_HIGH, TAXI, CLIMBING = 'scoring0', 'scoring1', 'scoring2', 'scoring3'
 
+
 def create_data_dict_2022():
     return {
         'general':{
