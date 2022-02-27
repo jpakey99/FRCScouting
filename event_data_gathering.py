@@ -5,6 +5,7 @@ import year_specific_data
 import VisCreation
 from scouting.scouting2022 import scouting2022, team_point_contribution
 tba = tbapy.TBA('rzxV1jZwdmWsmJGakoQrdFmCVntwtcGtSPcaVCEjWXXW8wpoScnXWUsFCJ1mY3n9')
+from scouting.power_rankings import power_rankings2022
 
 
 def qual_matches(event_matches):
@@ -30,6 +31,7 @@ match = qual_matches(match)
 team_dict = scouting2022(match)
 cont = team_point_contribution(team_dict)
 print(cont)
+power_rankings2022(cont)
 # print(match)
 # keys = match['score_breakdown']['blue']
 # for m in match:

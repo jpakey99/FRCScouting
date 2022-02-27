@@ -106,5 +106,5 @@ def team_point_contribution(team_dict):
             tele_high += team_dict[team]['tele_high'][i]
             endgame += team_dict[team]['endgame'][i]
         total = (taxi)/matches + ((2*auto_low)/matches) + ((4*auto_high)/matches) + (tele_low/matches) + ((2*tele_high)/matches) + (endgame/matches)
-        contributions.append([team, total, taxi/matches, ((auto_low*2)/matches + (auto_high *4)/matches), ((tele_low)/matches + (2*tele_high)/matches), endgame/matches])
+        contributions.append([team, total, taxi/matches, (((auto_low*2)/matches)/3 + ((auto_high *4)/matches)/3), (((tele_low)/matches)/3 + ((2*tele_high)/matches)/3), endgame/matches])
     return contributions
