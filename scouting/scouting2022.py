@@ -80,7 +80,8 @@ def scout_match(match, team_dict):
         if blue[i] not in team_dict:
             add_team(blue[i], team_dict)
         update_team(blue[i], team_dict, blue_taxi[i], int(blue_auto_cargo_low), int(blue_auto_cargo_high), int(blue_tele_cargo_low), int(blue_tele_cargo_high), end_game)
-        end_game = endgame_conversion[blue_endgame[i]]
+
+        end_game = endgame_conversion[red_endgame[i]]
         if red[i] not in team_dict:
             add_team(red[i], team_dict)
         update_team(red[i], team_dict, red_taxi[i], int(red_auto_cargo_low), int(red_auto_cargo_high), int(red_tele_cargo_low), int(red_tele_cargo_high), end_game)
