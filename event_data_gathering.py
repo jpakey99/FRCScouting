@@ -1,7 +1,6 @@
 import tbapy  # gives access to TBA API
 from Graph import LineGraph
 import data2022
-import year_specific_data
 import VisCreation
 from scouting.scouting2022 import scouting2022, team_point_contribution
 tba = tbapy.TBA('rzxV1jZwdmWsmJGakoQrdFmCVntwtcGtSPcaVCEjWXXW8wpoScnXWUsFCJ1mY3n9')
