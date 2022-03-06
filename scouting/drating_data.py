@@ -23,7 +23,7 @@ def convert_cont_list_to_dict(contributions):
     return t_dict
 
 
-def draft_efficiency(contributions, alliances):
+def draft_efficiency(contributions, alliances, event):
     """See how many points team could have drafted instead
     receive + if they drafted best team.  Amount based on next best team available
     receive - if they do not choose best team available. Amount is based on best team available"""
@@ -33,19 +33,36 @@ def draft_efficiency(contributions, alliances):
     t_dict = convert_cont_list_to_dict(contributions)
     alliance_num = 0
     for i, pick in enumerate(draftpick_order):
-        if not (i <= 15 and i % 2 == 0):
-            pick_contr = t_dict[pick]
-            current_champ = 0
-            for t in t_dict:
-                if t not in draftpick_order[:i+1] and (t_dict[t] > pick_contr or t_dict[t] > current_champ):
-                    current_champ = t_dict[t]
-            pick_eff.append(pick_contr - current_champ)
-            alliance_eff[alliance_num] += pick_contr - current_champ
+        print(alliance_num)
+        if pick in t_dict:
+            if not (i <= 15 and i % 2 == 0):
+                pick_contr = t_dict[pick]
+                current_champ = 0
+                for t in t_dict:
+                    if t not in draftpick_order[:i+1] and (t_dict[t] > pick_contr or t_dict[t] > current_champ):
+                        current_champ = t_dict[t]
+                p_eff = pick_contr - current_champ
+                pick_eff.append(p_eff)
+                alliance_eff[alliance_num] += p_eff
+                # print(alliance_num, p_eff, alliance_eff[alliance_num])
+        else:
+            pick_eff.append(0)
+            alliance_eff[alliance_num] = 0
         mod = i % 2
-        if i <= 15 and mod == 1:
+        if i <= 14 and mod == 1:
             alliance_num += 1
+        elif i <= 15:
+            i = i
         else:
             alliance_num -= 1
-    print(pick_eff)
+    print(len(pick_eff))
     print(alliance_eff)
-    pass
+    f = open('scouting/' + event + '_draft_efficiency.csv', 'a')
+    f.write('alliance,alliance_efficiency,captain,pick1,pick1_efficiency,pick2,pick2_efficiency\n')
+    for i in range(8):
+        captain = alliances[i][0]
+        a_eff = alliance_eff[i]
+        pick1, pick1_eff = alliances[i][1], pick_eff[i]
+        pick2, pick2_eff = alliances[i][2], pick_eff[15-i]
+        f.write("{},{},{},{},{},{},{}\n".format((str(i+1)),str(a_eff),captain,pick1,str(pick1_eff),pick2,str(pick2_eff)))
+    f.close()
