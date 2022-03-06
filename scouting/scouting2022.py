@@ -1,3 +1,6 @@
+import csv
+
+
 endgame_conversion = {
     'None': 0,
     'Low': 2,
@@ -51,40 +54,41 @@ def calc_upper_hub_amount(match, color, match_time):
 
 
 def scout_match(match, team_dict):
-    blue = match['alliances']['blue']['team_keys']
-    red = match['alliances']['red']['team_keys']
-    bt = [match['score_breakdown']['blue']['taxiRobot1'], match['score_breakdown']['blue']['taxiRobot2'],match['score_breakdown']['blue']['taxiRobot3']]
-    rt = [match['score_breakdown']['red']['taxiRobot1'], match['score_breakdown']['red']['taxiRobot2'],match['score_breakdown']['red']['taxiRobot3']]
-    blue_taxi, red_taxi = [], []
-    for t in range(3):
-        if bt[t] == 'No':
-            blue_taxi.append(0)
-        else:
-            blue_taxi.append(2)
-        if rt[t] == 'No':
-            red_taxi.append(0)
-        else:
-            red_taxi.append(2)
-    red_auto_cargo_low = calc_lower_hub_amount(match, 'red', 'auto')
-    red_tele_cargo_low = calc_lower_hub_amount(match, 'red', 'teleop')
-    blue_auto_cargo_low = calc_lower_hub_amount(match, 'blue', 'auto')
-    blue_tele_cargo_low = calc_lower_hub_amount(match, 'blue', 'teleop')
-    red_auto_cargo_high = calc_upper_hub_amount(match, 'red', 'auto')
-    red_tele_cargo_high = calc_upper_hub_amount(match, 'red', 'teleop')
-    blue_auto_cargo_high = calc_upper_hub_amount(match, 'blue', 'auto')
-    blue_tele_cargo_high = calc_upper_hub_amount(match, 'blue', 'teleop')
-    blue_endgame = [match['score_breakdown']['blue']['endgameRobot1'], match['score_breakdown']['blue']['endgameRobot2'], match['score_breakdown']['blue']['endgameRobot3']]
-    red_endgame = [match['score_breakdown']['red']['endgameRobot1'], match['score_breakdown']['red']['endgameRobot2'], match['score_breakdown']['red']['endgameRobot3']]
-    for i in range(len(blue)):
-        end_game = endgame_conversion[blue_endgame[i]]
-        if blue[i] not in team_dict:
-            add_team(blue[i], team_dict)
-        update_team(blue[i], team_dict, blue_taxi[i], int(blue_auto_cargo_low), int(blue_auto_cargo_high), int(blue_tele_cargo_low), int(blue_tele_cargo_high), end_game)
+    if match['actual_time'] is not None:
+        blue = match['alliances']['blue']['team_keys']
+        red = match['alliances']['red']['team_keys']
+        bt = [match['score_breakdown']['blue']['taxiRobot1'], match['score_breakdown']['blue']['taxiRobot2'],match['score_breakdown']['blue']['taxiRobot3']]
+        rt = [match['score_breakdown']['red']['taxiRobot1'], match['score_breakdown']['red']['taxiRobot2'],match['score_breakdown']['red']['taxiRobot3']]
+        blue_taxi, red_taxi = [], []
+        for t in range(3):
+            if bt[t] == 'No':
+                blue_taxi.append(0)
+            else:
+                blue_taxi.append(2)
+            if rt[t] == 'No':
+                red_taxi.append(0)
+            else:
+                red_taxi.append(2)
+        red_auto_cargo_low = calc_lower_hub_amount(match, 'red', 'auto')
+        red_tele_cargo_low = calc_lower_hub_amount(match, 'red', 'teleop')
+        blue_auto_cargo_low = calc_lower_hub_amount(match, 'blue', 'auto')
+        blue_tele_cargo_low = calc_lower_hub_amount(match, 'blue', 'teleop')
+        red_auto_cargo_high = calc_upper_hub_amount(match, 'red', 'auto')
+        red_tele_cargo_high = calc_upper_hub_amount(match, 'red', 'teleop')
+        blue_auto_cargo_high = calc_upper_hub_amount(match, 'blue', 'auto')
+        blue_tele_cargo_high = calc_upper_hub_amount(match, 'blue', 'teleop')
+        blue_endgame = [match['score_breakdown']['blue']['endgameRobot1'], match['score_breakdown']['blue']['endgameRobot2'], match['score_breakdown']['blue']['endgameRobot3']]
+        red_endgame = [match['score_breakdown']['red']['endgameRobot1'], match['score_breakdown']['red']['endgameRobot2'], match['score_breakdown']['red']['endgameRobot3']]
+        for i in range(len(blue)):
+            end_game = endgame_conversion[blue_endgame[i]]
+            if blue[i] not in team_dict:
+                add_team(blue[i], team_dict)
+            update_team(blue[i], team_dict, blue_taxi[i], int(blue_auto_cargo_low), int(blue_auto_cargo_high), int(blue_tele_cargo_low), int(blue_tele_cargo_high), end_game)
 
-        end_game = endgame_conversion[red_endgame[i]]
-        if red[i] not in team_dict:
-            add_team(red[i], team_dict)
-        update_team(red[i], team_dict, red_taxi[i], int(red_auto_cargo_low), int(red_auto_cargo_high), int(red_tele_cargo_low), int(red_tele_cargo_high), end_game)
+            end_game = endgame_conversion[red_endgame[i]]
+            if red[i] not in team_dict:
+                add_team(red[i], team_dict)
+            update_team(red[i], team_dict, red_taxi[i], int(red_auto_cargo_low), int(red_auto_cargo_high), int(red_tele_cargo_low), int(red_tele_cargo_high), end_game)
 
 
 def scouting2022(matches:list):
@@ -109,3 +113,17 @@ def team_point_contribution(team_dict):
         total = (taxi)/matches + ((2*auto_low)/matches) + ((4*auto_high)/matches) + (tele_low/matches) + ((2*tele_high)/matches) + (endgame/matches)
         contributions.append([team, total, taxi/matches, (((auto_low*2)/matches)/3 + ((auto_high *4)/matches)/3), (((tele_low)/matches)/3 + ((2*tele_high)/matches)/3), endgame/matches])
     return contributions
+
+
+# def to_csv(contributions):
+#     headers = ['Team', 'Total', 'taxi', 'auto_low', 'auto_high', 'tele_low', 'tele_high', 'endgame']
+#     print(contributions)
+#     with open('rankings.csv') as f:
+#         write = csv.writer(f)
+#         # write.writerow(headers)
+#         write.writerows(contributions)
+#
+#
+# def sort_by_total(contributions:list):
+#     contributions.sort()
+#     return to_csv(contributions)

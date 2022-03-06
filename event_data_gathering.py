@@ -3,6 +3,7 @@ from Graph import LineGraph
 import data2022
 import VisCreation
 from scouting.scouting2022 import scouting2022, team_point_contribution
+from scouting.drating_data import draft_efficiency
 tba = tbapy.TBA('rzxV1jZwdmWsmJGakoQrdFmCVntwtcGtSPcaVCEjWXXW8wpoScnXWUsFCJ1mY3n9')
 
 from scouting.power_rankings import power_rankings2022
@@ -37,11 +38,12 @@ def playoff_matches(event_matches):
 
 data_dict = data2022.create_data_dict_2022()
 event = "2022flwp"
-print(get_playoff_allainces(event))
-# match = tba.event_matches(event)
-# match = qual_matches(match)
-# team_dict = scouting2022(match)
-# cont = team_point_contribution(team_dict)
+alliances = get_playoff_allainces(event)
+match = tba.event_matches(event)
+match = qual_matches(match)
+team_dict = scouting2022(match)
+cont = team_point_contribution(team_dict)
+draft_efficiency(cont, alliances)
 # print(cont)
 # power_rankings2022(cont)
 # print(match)
