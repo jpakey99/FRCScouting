@@ -27,13 +27,15 @@ def draft_efficiency(contributions, alliances, event):
     """See how many points team could have drafted instead
     receive + if they drafted best team.  Amount based on next best team available
     receive - if they do not choose best team available. Amount is based on best team available"""
+    if not alliances:
+        return
+    print(event, alliances)
     draftpick_order = pick_order(alliances)
     alliance_eff = [0]*len(alliances)
     pick_eff = []
     t_dict = convert_cont_list_to_dict(contributions)
     alliance_num = 0
     for i, pick in enumerate(draftpick_order):
-        print(alliance_num)
         if pick in t_dict:
             if not (i <= 15 and i % 2 == 0):
                 pick_contr = t_dict[pick]
@@ -44,7 +46,6 @@ def draft_efficiency(contributions, alliances, event):
                 p_eff = pick_contr - current_champ
                 pick_eff.append(p_eff)
                 alliance_eff[alliance_num] += p_eff
-                # print(alliance_num, p_eff, alliance_eff[alliance_num])
         else:
             pick_eff.append(0)
             alliance_eff[alliance_num] = 0
@@ -55,14 +56,16 @@ def draft_efficiency(contributions, alliances, event):
             i = i
         else:
             alliance_num -= 1
-    print(len(pick_eff))
+    print(draftpick_order)
+    print(pick_eff)
     print(alliance_eff)
-    f = open('scouting/' + event + '_draft_efficiency.csv', 'a')
+    f = open('scouting/' + event + '_draft_efficiency.csv', 'w')
     f.write('alliance,alliance_efficiency,captain,pick1,pick1_efficiency,pick2,pick2_efficiency\n')
     for i in range(8):
         captain = alliances[i][0]
         a_eff = alliance_eff[i]
         pick1, pick1_eff = alliances[i][1], pick_eff[i]
-        pick2, pick2_eff = alliances[i][2], pick_eff[15-i]
+        pick2, pick2_eff = alliances[i][2], pick_eff[len(pick_eff)-1-i]
         f.write("{},{},{},{},{},{},{}\n".format((str(i+1)),str(a_eff),captain,pick1,str(pick1_eff),pick2,str(pick2_eff)))
     f.close()
+    return alliance_eff, pick_eff

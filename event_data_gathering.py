@@ -9,12 +9,20 @@ tba = tbapy.TBA('rzxV1jZwdmWsmJGakoQrdFmCVntwtcGtSPcaVCEjWXXW8wpoScnXWUsFCJ1mY3n
 from scouting.power_rankings import power_rankings2022
 
 
+def get_team_contributions(qual_matches):
+    team_dict = scouting2022(qual_matches)
+    return team_point_contribution(team_dict)
+
+
+def get_matches_for_event(event):
+    return tba.event_matches(event)
+
+
 def draft_eff_for_event(event):
     alliances = get_playoff_allainces(event)
-    match = tba.event_matches(event)
-    match = qual_matches(match)
-    team_dict = scouting2022(match)
-    cont = team_point_contribution(team_dict)
+    match = get_matches_for_event(event)
+    q_matches = qual_matches(match)
+    cont = get_team_contributions(q_matches)
     draft_efficiency(cont, alliances, event)
 
 
@@ -67,13 +75,13 @@ def playoff_matches(event_matches):
     return matches
 
 
-data_dict = data2022.create_data_dict_2022()
+# data_dict = data2022.create_data_dict_2022()
 events = get_event_keys_by_week("2022", 0)
-event = "2022flwp"
+# event = "2022bcvi"
+# event = "2022flwp"
 # print(events)
-draft_eff_for_event(event)
-
-
+# draft_eff_for_event(event)
+draft_eff_for_week(events)
 
 
 # print(cont)
